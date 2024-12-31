@@ -1,0 +1,4 @@
+
+1. 项目文档位于 Readme 和 docs 下，做任务时如果有不确定的信息，那么就到文档中找找答案，如果找不到则要询问用户对应的信息
+2. 代码注释强制使用英文，不要输出中文
+3. nextjs action 的 response 没有 message，只有 code，message 需要根据 code 去判断，具体有哪些 code 可以从 ErrorCodes 里面看到
