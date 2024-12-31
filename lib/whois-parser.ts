@@ -14,6 +14,14 @@ const CREATION_DATE_KEYS = [
   'Domain Registration Date',
 ] as const;
 
+const REGISTRANT_KEYS = [
+  'Registrant',
+  'Registrant Name',
+  'Registrant Organization',
+  'Registrant Email',
+  'Registry Registrant ID',
+] as const;
+
 /**
  * Parse a line of WHOIS data into key-value pair
  * @param line Line of text from WHOIS response
@@ -77,14 +85,20 @@ export function parseWhoisData(raw: string): WhoisInfo {
     }
   }
 
-  // Parse creation date and use it to determine registration status
+  // Parse creation date
   const creationDateKey = CREATION_DATE_KEYS.find((key) => key in whoisData);
   const creationDate = creationDateKey
     ? parseDateSafely(whoisData[creationDateKey])
     : null;
 
-  // If we have a valid creation date, the domain is registered
-  const registered = creationDate !== null;
+  // Check if domain is registered based on creation date or registrant information
+  const hasRegistrantInfo = REGISTRANT_KEYS.some(
+    (key) =>
+      key in whoisData &&
+      whoisData[key] !== 'n/a' &&
+      whoisData[key] !== 'redacted',
+  );
+  const registered = creationDate !== null || hasRegistrantInfo;
 
   return {
     registered,
